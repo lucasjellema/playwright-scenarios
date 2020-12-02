@@ -2,7 +2,6 @@ const { decrypt } = require("./crypt");
 
 const CONCLUSION_TIMESHEET_URL = "https://somenumber.somesite.nl/"
 
-// credentials can be encrypted using the encrypt function in the crypt module
 const conclusionEncryptedCredentials =  {
   username : {
     iv: 'c3cec8d604bd1b31dd6de5ac1a78ef13',
@@ -15,16 +14,16 @@ const conclusionEncryptedCredentials =  {
   
 }    
 
-
 const getConclusionCredentials = function (secretKey) {
     const conclusionCredentials = {
         username : decrypt(secretKey, conclusionEncryptedCredentials.username),
         password : decrypt(secretKey, conclusionEncryptedCredentials.password),
-        CONCLUSION_TIMESHEET_URL: CONCLUSION_TIMESHEET_URL    
+        CONCLUSION_TIMESHEET_URL: CONCLUSION_TIMESHEET_URL       
     }
     return conclusionCredentials    
-}
 
-exports.getConclusionCredentials = getConclusionCredentials
+}
+exports.retrieveConclusionCredentials = getConclusionCredentials
+
 
 

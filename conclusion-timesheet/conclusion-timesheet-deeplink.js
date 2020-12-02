@@ -1,13 +1,16 @@
 const { chromium } = require('playwright');
-const { getConclusionCredentials } = require("./conclusion-credentials");
+const { trapEventsOnPage } = require("./playwrightHelper");
+const { retrieveConclusionCredentials } = require("./conclusion-credentials");
 const { gotoTimesheet } = require("./conclusion-timesheet-helper");
+
+const secretKey =  process.argv[2];
+
+const conclusionCredentials  = retrieveConclusionCredentials( secretKey)
 
 const sleep = (milliseconds) => {
   return new Promise(resolve => setTimeout(resolve, milliseconds))
 }
 
-const secretKey = process.argv[2]
-const conclusionCredentials = getConclusionCredentials(secretKey)
 // in PowerShell, to set the env var [System.Environment]::SetEnvironmentVariable('MS_PW', 'VALUE',[System.EnvironmentVariableTarget]::user)
 // to read [System.Environment]::GetEnvironmentVariable('MS_PW','user')
 
