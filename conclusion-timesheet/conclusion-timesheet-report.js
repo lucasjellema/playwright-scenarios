@@ -1,5 +1,5 @@
 const { chromium } = require('playwright');
-const { trapEventsOnPage } = require("./playwrightHelper");
+const { trapEventsOnPage } = require("../playwrightHelper");
 const { gotoTimesheet } = require("./conclusion-timesheet-helper");
 const { getConclusionCredentials } = require("./conclusion-credentials");
 const sleep = (milliseconds) => {
