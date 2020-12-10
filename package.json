@@ -1,0 +1,25 @@
+{
+  "name": "playwright-scenarios",
+  "version": "1.0.0",
+  "description": "Some scenarios using Playwright - deeplink bookmarks, tactical integration, RPA, UI Healthcheck, Test Automation of User Interface, documenting web applications, customzing the client side of a web application.",
+  "main": "index.js",
+  "dependencies": {
+    "axios": "^0.21.0",
+    "playwright": "^1.6.2",
+    "request": "^2.88.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lucasjellema/playwright-scenarios.git"
+  },
+  "author": "Lucas Jellema",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lucasjellema/playwright-scenarios/issues"
+  },
+  "homepage": "https://github.com/lucasjellema/playwright-scenarios#readme"
+}
