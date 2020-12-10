@@ -12,7 +12,7 @@ const translate = async (sourceText, sourceLanguage, targetLanguage) => {
     //trapEventsOnPage(page)
 
 
-    await page.setViewportSize({ width: 1514, height: 696 })
+//    await page.setViewportSize({ width: 1514, height: 696 })
     await navigationPromise
 
     await page.waitForSelector('textarea')
