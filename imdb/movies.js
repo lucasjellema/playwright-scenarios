@@ -1,6 +1,6 @@
 const { chromium } = require('playwright');
 const { trapEventsOnPage } = require("../playwrightHelper");
-const axios = require("axios");
+
 const fs = require("fs");
 const request = require('request')
 
@@ -13,9 +13,8 @@ const movie = async (title) => {
 
     // debug all events raised in the browser page
     //trapEventsOnPage(page)
-//    navigationPromise = page.waitForNavigation()
     await page.click('tr.findResult > td > a');
-   // navigationPromise = page.waitForNavigation()
+
     // post is image  $('div.poster > a > img')
     await sleep(1200)
 
@@ -33,10 +32,9 @@ const movie = async (title) => {
     const releaseDate = await page.$eval('a[title="See more release dates"]', (el) => el.innerText);
     const fullTitle = await page.$eval('div.title_wrapper > h1', (el) => el.innerText); 
     const summary = await page.$eval('div.summary_text', (el) => el.innerText);
+
     // div.credit_summary_item has an h4 with as innerText Stars: | Director: | Writers:
     // and a  number of a elements in that category whose innerText contains a name
-    //credit_summary_item
-
     const credits = await page.$$eval("div.credit_summary_item", (divs) => {
         return divs.map(div => { console.log(`credit : ${div}`)
             const creds = {"category": div.firstElementChild.innerText, "items": []}
