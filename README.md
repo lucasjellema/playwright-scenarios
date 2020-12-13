@@ -15,3 +15,11 @@ Folder Translate contains a Node appplication `translate.js` that interacts thro
 
 ## IMDb
 Folder imdb contains a Node application `movie.js`. Using Playwright, this application opens the IMDb web site and searches for a movie by title. It scrapes the IMDb page for movie properties and returns a JSON object with these attributes such as director, actors, writers, release date, duration. It also writes a JPG file with the movie poster. 
+
+## Search
+Folder search contains a Node application `search.js`. This application runs the search site DuckDuckGo and customizes it a little: 
+* a header is injected
+* a button is added to search in the context of a specific site
+* a button is added to perform a vanity search (search on the author's name for recent results)
+* a button is added to perform the search in parallel on multiple search sites (each site in its own tab)
+Note how JavaScript is added to the DuckDuckGo web application and how functions running in the Node context are invoked from within the browser context.
