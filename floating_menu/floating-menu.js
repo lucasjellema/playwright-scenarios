@@ -1,5 +1,7 @@
 const { chromium } = require('playwright');
 const { trapEventsOnPage } = require("../playwrightHelper");
+const fs = require("fs");
+const request = require('request')
 
 const URL = "https://www.knltb.nl/"
 const SNAPSHOT_PATH = "./snapshots/"
@@ -15,12 +17,28 @@ const sleep = (milliseconds) => {
   await context.exposeBinding('snapshotFunction', snapshotter)
   // the function to create the toolbar - HTML and CSS
   await context.exposeBinding('prepareToolbarFunction', prepareToolbar)
+  await context.exposeBinding('saveAllImagesFunction', allImageDownloader )
 
+  const shortCutJS = `function handleShortCutKey(e) { 
+                         if ('KeyB'==e.code && e.ctrlKey) toggleToolbar()
+                      }
+                      const toggleToolbar = () => {
+                        const toolbar = document.getElementById('${TOOLBAR_ID}')
+                        if ('none'==toolbar.style.display)
+                           toolbar.style.display = "block"
+                        else   
+                           toolbar.style.display = "none"
+                      }
+                      // create a shortcut key (ctrl + b) that triggers the JS function to toggle the toolbar
+                      document.addEventListener('keyup', handleShortCutKey);                      
+                      `
+    
   // this script invokes the function that creates the toolbar in the page 
   // it is executed when a page or frame is created or navigated (https://microsoft.github.io/playwright/docs/1.6.1/api/class-browsercontext#browsercontextaddinitscriptscript-arg)
   await context.addInitScript({
-    content: `console.log('initializing toolbar');
+    content: `console.log('initializing script after page or frame DOM recreate');
               window.prepareToolbarFunction();
+              ${shortCutJS}
              `
   });
   const page = await context.newPage();
@@ -29,6 +47,7 @@ const sleep = (milliseconds) => {
   await browser.close()
 })()
 
+  
 const prepareToolbar = async (source) => {
   await source.page.addStyleTag({ content: menuStyleTag })
   const containerElement = await source.page.$('body')
@@ -50,6 +69,33 @@ const snapshotter = async (source, label) => {
   await source.page.$eval(`#${TOOLBAR_ID}`, (toolbar) => { toolbar.style.display = "block"; })
   return ""
 }
+
+const IMAGE_PATH = "./images/"
+var streamImageFromURL = function (imageURL, imageFilename) {
+  request(imageURL).pipe(fs.createWriteStream(`${IMAGE_PATH}${imageFilename}`));
+}
+
+const allImageDownloader = async (source) => {
+console.log(`go download all images in the page`)
+// using the page object in source.page, get all img elements and return a collection of image objects to be processed in the Node context
+const images = await source.page.$$eval("img", (images) => 
+        images.map((image) => { return {src: image.src, alt: image.alt, width:image.clientWidth, height:image.clientHeight}})
+   )
+// for each image of substantial size - determine the name of the image file and invoke the function streamImageFromURL to download the image and save it locally  
+images.forEach((image,index) => { if (image.width * image.height > 2500) {
+                            const startIndex = image.src.lastIndexOf("/") + 1 // do not include /
+                            const endIndex = image.src.indexOf("?")> -1?  image.src.indexOf("?"):500
+                            const imageFileNameUnderConstruction = `${new Date().toISOString().substr(0, 19)}-${index}-${image.src.substring(startIndex,endIndex)}`
+                            const imageFilename = 
+                            imageFileNameUnderConstruction.replace(/:/g, "");
+                            console.log(`download ${image.src} as ${imageFilename}`)
+                            streamImageFromURL(image.src, imageFilename);
+                          }                        
+});
+return images.length
+}
+
+
 
 const TOOLBAR_ID = "my-playwright-floating-tool-bar"
 const addHTML = async function (html, parentElementHandle, page) {  
@@ -111,7 +157,7 @@ ul.toolbar {
 const navBar = `<ul class="toolbar">
 <li ><a href="#home" >Reset</a></li>
 <li ><a href="#news" >Pause</a></li>
-<li><a href="#contact">Next Step</a></li>
+<li ><a alt="Save all images in the current page or frame" onclick="window.saveAllImagesFunction('FloatingDemo')">Save Images</a></li>
 <li style="float:right"><a class="active" onclick="window.snapshotFunction('FloatingDemo')">Take Snapshot</a></li>
 </ul>    
 `
