@@ -1,7 +1,16 @@
 const CALLOUT_ID = "my-playwright-floating-callout"
 
+const setCallOutJS = ` function setCallOut(title, body) {
+  const calloutHeader = document.getElementById('callout-header')
+  if (calloutHeader) calloutHeader.innerText = title
+  const calloutBody = document.getElementById('callout-body')
+  if (calloutBody) calloutBody.innerText = body
+}
+`
+
 const injectCalloutIntoPage = async (page, title, bodyText) => {
   await page.addStyleTag({ content: calloutStyleTag })
+  await page.addScriptTag({ content: setCallOutJS })
   const containerElement = await page.$('body')
   const html = callout.replace("callout_title", title).replace("callout_body", bodyText)
   if (containerElement) {
@@ -9,6 +18,18 @@ const injectCalloutIntoPage = async (page, title, bodyText) => {
   }
 }
 exports.injectCalloutIntoPage = injectCalloutIntoPage
+
+const populateCallout = async function (page, title, body) {
+  await page.evaluate(({title,body}) => {
+    const calloutHeader = document.getElementsByClassName('callout-header')[0]
+    calloutHeader.innerText = title;
+    const calloutBody = document.getElementById('callout-body')
+    calloutBody.innerText = body;
+}, ({title,body}))
+}
+
+exports.populateCallout = populateCallout
+
 
 const addHTML = async function (html, parentElementHandle, page) {
   await page.evaluate((args) => {
@@ -31,7 +52,7 @@ const calloutStyleTag = `
   /* Callout box - fixed position at the bottom of the page */
   .callout {
     position: fixed;
-    bottom: 35px;
+    bottom: 85px;
     right: 20px;
     margin-left: 20px;
     max-width: 400px;
@@ -68,11 +89,12 @@ const calloutStyleTag = `
   }
    
   `
-const callout = `<div class="callout">
-  <div class="callout-header">callout_title</div>
+const callout = `
+  <div class="callout">
+  <div id="callout-header" class="callout-header">callout_title</div>
   <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
   <div class="callout-container">
-    <p>callout_body</p>
+    <p id="callout-body">callout_body</p>
   </div>
 </div>    
   `

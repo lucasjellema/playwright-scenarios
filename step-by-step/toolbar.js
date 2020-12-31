@@ -109,6 +109,8 @@ const shortCutJS = `function handleShortCutKey(e) {
         div.classList.add('toolbar');
         div.innerHTML = args.html.replace('my_scenario_title', args.scenarioTitle)
         args.parentElementHandle.appendChild(div);
+        document.getElementsByTagName("BODY")[0].style['scroll-behavior']  = 'smooth';
+
       }
     }, { parentElementHandle, html, TOOLBAR_ID , scenarioTitle});
     
@@ -119,8 +121,8 @@ const shortCutJS = `function handleShortCutKey(e) {
   #${TOOLBAR_ID} {
     z-index:150;
     position: fixed;
-    bottom: 50px;
-    width: 70%;
+    bottom: 30px;
+    width: 80%;
     }
   
   ul.toolbar {
@@ -161,14 +163,15 @@ const shortCutJS = `function handleShortCutKey(e) {
   
 
   const navBar = `<ul class="toolbar">
-  <li><a onclick="window.directorFunction('next')">Next Act</a></li>
-  <li><a onclick="window.directorFunction('reset')">Reset Scenario</a></li>
+  <li><a onclick="window.directorFunction('next')">Play</a></li>
+  <li><a onclick="window.directorFunction('skip')">Skip</a></li>
+  <li><a onclick="window.directorFunction('reset')">Reset</a></li>
   <li><a onclick="window.directorFunction('switch')">Switch Scenario</a></li>
 
   <li><h4 id="scenarioTitle">my_scenario_title</h4></li>
 
   <li><a alt="Save all images in the current page or frame" onclick="window.saveAllImagesFunction('FloatingDemo')">Save Images</a></li>
-  <li style="float:right"><a class="active" onclick="window.snapshotFunction('FloatingDemo')">Take Snapshot</a></li>
+  <li style="float:right"><a class="active" onclick="window.snapshotFunction('FloatingDemo')">Snapshot</a></li>
   </ul>    
 
   `

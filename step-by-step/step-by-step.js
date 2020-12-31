@@ -1,12 +1,13 @@
 const { chromium } = require('playwright');
 const { trapEventsOnPage } = require("../playwrightHelper");
 const { prepareToolbar } = require('./toolbar')
-const { injectCalloutIntoPage } = require('./callout')
+const { injectCalloutIntoPage, populateCallout } = require('./callout')
+const { scenarios } = require('./scenarios')
 
 
 const PLAY_URL = "https://en.wikipedia.org/wiki/Main_Page"
 
-const scenarioStatus = { currentScenario: 0, nextScene: 0 , scenarios:[]}
+const scenarioStatus = { currentScenario: 0, nextScene: 0, scenarios: [] }
 
 const sleep = (milliseconds) => {
   return new Promise(resolve => setTimeout(resolve, milliseconds))
@@ -20,7 +21,8 @@ const sleep = (milliseconds) => {
   // the function to take a snapshot of the current page
   const page = await context.newPage();
   await page.goto(PLAY_URL)
-  injectCalloutIntoPage(page, scenarioStatus.scenarios[scenarioStatus.currentScenario].title,"...")
+
+  injectCalloutIntoPage(page, scenarioStatus.scenarios[scenarioStatus.currentScenario].title, scenarioStatus.scenarios[scenarioStatus.currentScenario].description)
 
   await sleep(50000000) // 1000* 50 seconds
   await browser.close()
@@ -30,92 +32,48 @@ const director = async (source, instruction) => {
   if ('next' == instruction) {
     const scene = scenarioStatus.scenarios[scenarioStatus.currentScenario].scenes[scenarioStatus.nextScene++]
     const f = scene.action
-    injectCalloutIntoPage(source.page, scene.title,"***")
-  
+    await injectCalloutIntoPage(source.page, scene.title, scene.description)
+
     await f(source.page)
+    // reinstate the callout at the end of the scene - to make sure any page navigation did not undo it
+    await injectCalloutIntoPage(source.page, scene.title, scene.description)
+
+    // if a next scene is available, show the title and description that are coming up
+    if (scenarioStatus.nextScene < scenarioStatus.scenarios[scenarioStatus.currentScenario].scenes.length) {
+      const nextScene = scenarioStatus.scenarios[scenarioStatus.currentScenario].scenes[scenarioStatus.nextScene]
+      await populateCallout(source.page, "Coming Up: " + nextScene.title, nextScene.description)
+    }
+  }
+  if ('skip' == instruction) {
+    const scene = scenarioStatus.scenarios[scenarioStatus.currentScenario].scenes[scenarioStatus.nextScene++]
+    await injectCalloutIntoPage(source.page, scene.title, scene.description)
+
+    // if a next scene is available, show the title and description that are coming up
+    if (scenarioStatus.nextScene < scenarioStatus.scenarios[scenarioStatus.currentScenario].scenes.length) {
+      const nextScene = scenarioStatus.scenarios[scenarioStatus.currentScenario].scenes[scenarioStatus.nextScene]
+      await populateCallout(source.page, "Coming Up: " + nextScene.title, nextScene.description)
+    }
   }
   if ('reset' == instruction) {
     scenarioStatus.nextScene = 0
-  }
+    const nextScene = scenarioStatus.scenarios[scenarioStatus.currentScenario].scenes[scenarioStatus.nextScene]
+    await populateCallout(source.page, "Coming Up: " + nextScene.title, nextScene.description)
+}
   if ('switch' == instruction) {
-    scenarioStatus.currentScenario++ 
+    scenarioStatus.currentScenario++
     if (scenarioStatus.currentScenario >= scenarioStatus.scenarios.length) {
       scenarioStatus.currentScenario = 0
     }
     scenarioStatus.nextScene = 0
     const title = scenarioStatus.scenarios[scenarioStatus.currentScenario].title
-    injectCalloutIntoPage(source.page, scenarioStatus.scenarios[scenarioStatus.currentScenario].title,"...")
-    const scenarioTitle = await source.page.$('#scenarioTitle')    
-    await source.page.evaluate( ({scenarioTitle, title}) => {
+    injectCalloutIntoPage(source.page, title, scenarioStatus.scenarios[scenarioStatus.currentScenario].description)
+    const scenarioTitle = await source.page.$('#scenarioTitle')
+    // set the current scenario title in the toolbar's scenario element
+    await source.page.evaluate(({ scenarioTitle, title }) => {
       scenarioTitle.innerText = title
-    }, ({scenarioTitle, title}))
+    }, ({ scenarioTitle, title }))
   }
 }
 
-const tourNL = {
-  title: "Tour of The Netherlands"
-  , scenes:
-    [{
-      title: "Welcome to The Netherlands"
-      , action: async (page) => {
-        await page.type('#searchInput', 'The Netherlands', { delay: 100 });
-        await page.click('#searchButton')
-      }
-    },
-    {
-      title: "A little history",
-      action: async (page) => {
-        await page.waitForSelector('#History')
-        console.log('go scroll')
-        const history = await page.$('#History')
-        await history.scrollIntoViewIfNeeded()
-        //await history.selectText()
-
-      }
-    }
-    ]
-}
-
-const tourFR = {
-  title: "Tour of France"
-  , scenes:
-    [{
-      title: "Bienvenue en France"
-      , action: async (page) => {
-        await page.type('#searchInput', 'France', { delay: 100 });
-        await page.click('#searchButton')
-      }
-    },
-    {
-      title: "A little history",
-      action: async (page) => {
-        await page.waitForSelector('"Show globe"')
-        await page.click('"Show globe"')
-
-      }
-    }
-    ]
-}
-
-
-const tourUK = {
-  title: "Excursion in Great Britain"
-  , scenes:
-    [{
-      title: "Welcome in the UK"
-      , action: async (page) => {
-        await page.type('#searchInput', 'United Kingdom', { delay: 100 });
-        await page.click('#searchButton')
-      }
-    },
-    {
-      title: "Wandering around",
-      action: async (page) => {
-        await page.waitForSelector('"Show globe"')
-        await page.click('"Show globe"')
-
-      }
-    }
-    ]
-}
-scenarioStatus.scenarios = [tourNL, tourFR, tourUK]
+// load scenarios from module scenarios.js
+scenarioStatus.scenarios = scenarios
