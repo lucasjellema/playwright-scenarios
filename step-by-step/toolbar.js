@@ -121,13 +121,13 @@ const shortCutJS = `function handleShortCutKey(e) {
   #${TOOLBAR_ID} {
     z-index:150;
     position: fixed;
-    bottom: 30px;
-    width: 80%;
+    bottom: 20px;
+    width: 85%;
     }
   
   ul.toolbar {
     list-style-type: none;
-    margin-left: 15%;
+    margin-left: 10%;
     padding: 0;
     overflow: hidden;
     border: 1px solid #e7e7e7;
@@ -166,6 +166,7 @@ const shortCutJS = `function handleShortCutKey(e) {
   <li><a onclick="window.directorFunction('next')">Play</a></li>
   <li><a onclick="window.directorFunction('skip')">Skip</a></li>
   <li><a onclick="window.directorFunction('reset')">Reset</a></li>
+  <li><a onclick="window.directorFunction('pause')">Pause</a></li>
   <li><a onclick="window.directorFunction('switch')">Switch Scenario</a></li>
 
   <li><h4 id="scenarioTitle">my_scenario_title</h4></li>

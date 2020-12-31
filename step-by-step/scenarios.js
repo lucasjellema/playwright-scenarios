@@ -5,6 +5,10 @@ const sleep = (milliseconds) => {
     return new Promise(resolve => setTimeout(resolve, milliseconds))
 }
 
+let waitForUnpause = null
+const setWaitForUnpause = (waitForUnpauseReference) => { waitForUnpause = waitForUnpauseReference }
+exports.setWaitForUnpause = setWaitForUnpause
+
 const tourNL = {
     title: "Tour of The Netherlands",
     description: "Quick introduction to the Low Countries"
@@ -13,11 +17,12 @@ const tourNL = {
             title: "Welcome to The Netherlands"
             , description: "First steps in that small country largely below sea level. Note: Holland is not the correct name for this country."
             , action: async (page) => {
-                await plotBubble(page,'#searchInput', 'Type our search Term into the Search Box', "LU", {left:-355, top:-33})
+                await plotBubble(page, '#searchInput', 'Type our search Term into the Search Box', "LU", { left: -355, top: -33 })
                 await page.type('#searchInput', 'The Netherlands', { delay: 100 });
+                await waitForUnpause()
                 await page.click('#searchButton')
                 await page.waitForSelector('#searchInput')
-                await plotBubble(page, '#searchInput',"No more searches at this time", "LU", {left:-355, top:-33}, 3000)                
+                await plotBubble(page, '#searchInput', "No more searches at this time", "LU", { left: -355, top: -33 }, 3000)
             }
         },
         {
@@ -26,11 +31,13 @@ const tourNL = {
             , action: async (page) => {
                 await page.waitForSelector('#History')
                 const history = await page.$('#History')
-                await history.scrollIntoViewIfNeeded({behavior: 'smooth' })
+                await history.scrollIntoViewIfNeeded({ behavior: 'smooth' })
+                await waitForUnpause()
                 await sleep(3000)
                 const republic = await page.$('a[title="Edit section: Dutch Republic (1581–1795)"]')
                 await scrollToElement(page, republic)
-                populateCallout(page,"Birth of a Nation", "The rise of the Republic was the result of the failure to come to an agreement with the Spanish overlords.")
+                populateCallout(page, "Birth of a Nation", "The rise of the Republic was the result of the failure to come to an agreement with the Spanish overlords.")
+                await waitForUnpause()
                 await sleep(2500);
             }
         },
@@ -40,20 +47,56 @@ const tourNL = {
             , action: async (page) => {
                 const sports = await page.$('a[title="Edit section: Sports"]')
                 await sports.scrollIntoViewIfNeeded()
-                populateCallout(page,"Heroes of Past and Future", "Dutch sport heroes of old include Ard and Keessie, Anton Geesink and Bep van Klaveren. Current heroes are Max Verstappen and Estevana Polman")
+                populateCallout(page, "Heroes of Past and Future", "Dutch sport heroes of old include Ard and Keessie, Anton Geesink and Bep van Klaveren. Current heroes are Max Verstappen and Estevana Polman")
+                await waitForUnpause()
                 await sleep(2000)
-                const maxText = await page.$('a:text("was the first Dutchman to win a Grand Prix")') 
-                await page.evaluate(({maxText}) => {
-                    const p = maxText.parentElement                    
-                    let newhtml = `<mark>${p.innerHTML }</mark>`;
+                const maxText = await page.$('a:text("was the first Dutchman to win a Grand Prix")')
+                await page.evaluate(({ maxText }) => {
+                    const p = maxText.parentElement
+                    let newhtml = `<mark>${p.innerHTML}</mark>`;
                     p.innerHTML = newhtml;
-                    p.scrollIntoView({behavior: "smooth", block: "center", inline: "nearest"});
-                }, ({maxText}))
+                    p.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
+                }, ({ maxText }))
                 await sleep(3500);
             }
         },
+        {
+            title: "Culture"
+            , description: "Art, architecture and philosophy and more creativity in the low countries"
+            , action: async (page) => {
+                const culture = await page.$('a[title="Edit section: Culture"]')
+                await culture.scrollIntoViewIfNeeded()
+                populateCallout(page, "Masters of Art", " Hieronymus Bosch, Rembrandt van Rijn, Johannes Vermeer, Jan Steen, Jacob van Ruisdael, Vincent van Gogh, Piet Mondriaan, M. C. Escher")
+                await waitForUnpause()
+                await sleep(2000)
+                await page.hover('a[title="Rembrandt Harmenszoon van Rijn"]', { timeout: 3000 })
+
+                // open new page at https://artsandculture.google.com/asset/nachtwacht/eQEojRwTdypUKA
+                // with the nachtwacht
+
+                await sleep(4000)
+                const nachtwachtPage = await page.context().newPage();
+                await nachtwachtPage.goto('https://artsandculture.google.com/asset/nachtwacht/eQEojRwTdypUKA?ms=%7B%22x%22%3A0.5%2C%22y%22%3A0.5%2C%22z%22%3A8.675292605686364%2C%22size%22%3A%7B%22width%22%3A1.8008395481349482%2C%22height%22%3A1.2374999999999996%7D%7D');
+                await sleep(2000)
+                // bring that page in focus - for 5 seconds - then return to main page
+                await nachtwachtPage.bringToFront()
+                await sleep(5000)
+                await page.bringToFront()
+                await sleep(2000)
+                // const maxText = await page.$('a:text("was the first Dutchman to win a Grand Prix")') 
+                // await page.evaluate(({maxText}) => {
+                //     const p = maxText.parentElement                    
+                //     let newhtml = `<mark>${p.innerHTML }</mark>`;
+                //     p.innerHTML = newhtml;
+                //     p.scrollIntoView({behavior: "smooth", block: "center", inline: "nearest"});
+                // }, ({maxText}))
+                // await sleep(3500);
+            }
+        }
         ]
 }
+
+
 // browser - highlight searched
 //      let re = new RegExp(searched,"g"); // search for all instances
 // 		let el = document.getElementById("text");

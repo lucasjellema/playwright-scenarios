@@ -2,12 +2,12 @@ const { chromium } = require('playwright');
 const { trapEventsOnPage } = require("../playwrightHelper");
 const { prepareToolbar } = require('./toolbar')
 const { injectCalloutIntoPage, populateCallout } = require('./callout')
-const { scenarios } = require('./scenarios')
+const { scenarios, setWaitForUnpause } = require('./scenarios')
 
 
 const PLAY_URL = "https://en.wikipedia.org/wiki/Main_Page"
 
-const scenarioStatus = { currentScenario: 0, nextScene: 0, scenarios: [] }
+const scenarioStatus = { currentScenario: 0, nextScene: 0, scenarios: [], scenarioPaused: false }
 
 const sleep = (milliseconds) => {
   return new Promise(resolve => setTimeout(resolve, milliseconds))
@@ -27,6 +27,15 @@ const sleep = (milliseconds) => {
   await sleep(50000000) // 1000* 50 seconds
   await browser.close()
 })()
+
+// check if scenario is paused; if not, return; if it is, wait for 500ms, then check again 
+const waitForUnpause = async () => {
+  if (scenarioStatus.scenarioPaused) {
+    await sleep(500)
+    return await waitForUnpause()
+  }
+  return
+}
 
 const director = async (source, instruction) => {
   if ('next' == instruction) {
@@ -58,7 +67,12 @@ const director = async (source, instruction) => {
     scenarioStatus.nextScene = 0
     const nextScene = scenarioStatus.scenarios[scenarioStatus.currentScenario].scenes[scenarioStatus.nextScene]
     await populateCallout(source.page, "Coming Up: " + nextScene.title, nextScene.description)
-}
+  }
+  if ('pause' == instruction) {
+    scenarioStatus.scenarioPaused = !scenarioStatus.scenarioPaused
+  }
+
+
   if ('switch' == instruction) {
     scenarioStatus.currentScenario++
     if (scenarioStatus.currentScenario >= scenarioStatus.scenarios.length) {
@@ -77,3 +91,4 @@ const director = async (source, instruction) => {
 
 // load scenarios from module scenarios.js
 scenarioStatus.scenarios = scenarios
+setWaitForUnpause(waitForUnpause)
