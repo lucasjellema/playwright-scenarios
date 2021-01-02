@@ -1,6 +1,7 @@
 const { chromium } = require('playwright');
 const { trapEventsOnPage } = require("../playwrightHelper");
 const fs = require("fs");
+const fspromises = fs.promises
 const request = require('request')
 
 const URL = "https://www.knltb.nl/"
@@ -155,8 +156,8 @@ ul.toolbar {
  
 `
 const navBar = `<ul class="toolbar">
-<li ><a href="#home" >Reset</a></li>
-<li ><a href="#news" >Pause</a></li>
+<li ><a>Reset</a></li>
+<li ><a>Pause</a></li>
 <li ><a alt="Save all images in the current page or frame" onclick="window.saveAllImagesFunction('FloatingDemo')">Save Images</a></li>
 <li style="float:right"><a class="active" onclick="window.snapshotFunction('FloatingDemo')">Take Snapshot</a></li>
 </ul>    

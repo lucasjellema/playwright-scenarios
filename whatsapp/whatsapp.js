@@ -3,7 +3,7 @@ const { trapEventsOnPage } = require("../playwrightHelper");
 
 const WHATSAPP_WEB_URL = "https://web.whatsapp.com/"
 const whatsappContact = "Mezelf, mij en ik"
-//const whatsappContact = "Madelon"
+
 const message = "My message from the WhatsApp robot"
 
 const sleep = (milliseconds) => {
