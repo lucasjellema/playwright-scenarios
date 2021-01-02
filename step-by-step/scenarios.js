@@ -83,14 +83,6 @@ const tourNL = {
                 await sleep(5000)
                 await page.bringToFront()
                 await sleep(2000)
-                // const maxText = await page.$('a:text("was the first Dutchman to win a Grand Prix")') 
-                // await page.evaluate(({maxText}) => {
-                //     const p = maxText.parentElement                    
-                //     let newhtml = `<mark>${p.innerHTML }</mark>`;
-                //     p.innerHTML = newhtml;
-                //     p.scrollIntoView({behavior: "smooth", block: "center", inline: "nearest"});
-                // }, ({maxText}))
-                // await sleep(3500);
             }
         }
         ]

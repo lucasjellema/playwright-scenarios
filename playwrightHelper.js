@@ -6,7 +6,7 @@ const trapEventsOnPage = (page) => {
     page.once('load', () => console.info('✅ Page is loaded'));
   
     // Emitted when the page attaches a frame
-    page.on('frameattached', () => console.info('✅ Frame is attached'));
+    page.on('frameattached', (frameHandle) => console.info(`✅ Frame is attached`));
   
     // Emitted when a frame within the page is navigated to a new URL
     page.on('framenavigated', () => console.info('👉 Frame is navigated'));

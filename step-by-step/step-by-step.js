@@ -17,12 +17,11 @@ const sleep = (milliseconds) => {
   const browser = await chromium.launch({ headless: false })
   const context = await browser.newContext()
   prepareToolbar(context, director, scenarioStatus)
-
-  // the function to take a snapshot of the current page
   const page = await context.newPage();
   await page.goto(PLAY_URL)
 
-  injectCalloutIntoPage(page, scenarioStatus.scenarios[scenarioStatus.currentScenario].title, scenarioStatus.scenarios[scenarioStatus.currentScenario].description)
+  injectCalloutIntoPage(page, scenarioStatus.scenarios[scenarioStatus.currentScenario].title
+    , scenarioStatus.scenarios[scenarioStatus.currentScenario].description)
 
   await sleep(50000000) // 1000* 50 seconds
   await browser.close()
@@ -42,11 +41,9 @@ const director = async (source, instruction) => {
     const scene = scenarioStatus.scenarios[scenarioStatus.currentScenario].scenes[scenarioStatus.nextScene++]
     const f = scene.action
     await injectCalloutIntoPage(source.page, scene.title, scene.description)
-
     await f(source.page)
     // reinstate the callout at the end of the scene - to make sure any page navigation did not undo it
     await injectCalloutIntoPage(source.page, scene.title, scene.description)
-
     // if a next scene is available, show the title and description that are coming up
     if (scenarioStatus.nextScene < scenarioStatus.scenarios[scenarioStatus.currentScenario].scenes.length) {
       const nextScene = scenarioStatus.scenarios[scenarioStatus.currentScenario].scenes[scenarioStatus.nextScene]
@@ -56,7 +53,6 @@ const director = async (source, instruction) => {
   if ('skip' == instruction) {
     const scene = scenarioStatus.scenarios[scenarioStatus.currentScenario].scenes[scenarioStatus.nextScene++]
     await injectCalloutIntoPage(source.page, scene.title, scene.description)
-
     // if a next scene is available, show the title and description that are coming up
     if (scenarioStatus.nextScene < scenarioStatus.scenarios[scenarioStatus.currentScenario].scenes.length) {
       const nextScene = scenarioStatus.scenarios[scenarioStatus.currentScenario].scenes[scenarioStatus.nextScene]
@@ -71,8 +67,6 @@ const director = async (source, instruction) => {
   if ('pause' == instruction) {
     scenarioStatus.scenarioPaused = !scenarioStatus.scenarioPaused
   }
-
-
   if ('switch' == instruction) {
     scenarioStatus.currentScenario++
     if (scenarioStatus.currentScenario >= scenarioStatus.scenarios.length) {
