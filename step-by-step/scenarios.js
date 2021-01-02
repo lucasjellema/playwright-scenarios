@@ -12,6 +12,7 @@ exports.setWaitForUnpause = setWaitForUnpause
 const tourNL = {
     title: "Tour of The Netherlands",
     description: "Quick introduction to the Low Countries"
+    ,url: "https://en.wikipedia.org/wiki/Main_Page"
     , scenes:
         [{
             title: "Welcome to The Netherlands"
@@ -98,6 +99,7 @@ const tourNL = {
 const tourFR = {
     title: "Tour of France"
     , description: "We will pay a brief visit to France"
+    ,url: "https://en.wikipedia.org/wiki/Main_Page"
     , scenes:
         [{
             title: "Bienvenue en France"
@@ -123,6 +125,7 @@ const tourFR = {
 const tourUK = {
     title: "Excursion in Great Britain",
     description: "Brief tour of the United Kingdom of Northern Ireland, Scotland, Wales and England"
+    ,url: "https://en.wikipedia.org/wiki/Main_Page"
     , scenes:
         [{
             title: "Welcome in the UK",

@@ -5,8 +5,6 @@ const { injectCalloutIntoPage, populateCallout } = require('./callout')
 const { scenarios, setWaitForUnpause } = require('./scenarios')
 
 
-const PLAY_URL = "https://en.wikipedia.org/wiki/Main_Page"
-
 const scenarioStatus = { currentScenario: 0, nextScene: 0, scenarios: [], scenarioPaused: false }
 
 const sleep = (milliseconds) => {
@@ -18,7 +16,7 @@ const sleep = (milliseconds) => {
   const context = await browser.newContext()
   prepareToolbar(context, director, scenarioStatus)
   const page = await context.newPage();
-  await page.goto(PLAY_URL)
+  await page.goto(scenarioStatus.scenarios[scenarioStatus.currentScenario].url)
 
   injectCalloutIntoPage(page, scenarioStatus.scenarios[scenarioStatus.currentScenario].title
     , scenarioStatus.scenarios[scenarioStatus.currentScenario].description)
@@ -73,6 +71,7 @@ const director = async (source, instruction) => {
       scenarioStatus.currentScenario = 0
     }
     scenarioStatus.nextScene = 0
+    await source.page.goto(scenarioStatus.scenarios[scenarioStatus.currentScenario].url)
     const title = scenarioStatus.scenarios[scenarioStatus.currentScenario].title
     injectCalloutIntoPage(source.page, title, scenarioStatus.scenarios[scenarioStatus.currentScenario].description)
     const scenarioTitle = await source.page.$('#scenarioTitle')
