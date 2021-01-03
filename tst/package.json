@@ -1,0 +1,19 @@
+{
+  "name": "playwright-basic-js",
+  "version": "0.0.1",
+  "directories": {
+    "test": "tests"
+  },
+  "dependencies": {
+    "@playwright/test": "^0.162.0"
+  },
+  "scripts": {
+    "test": "folio  --param browserName=chromium"
+  },
+  "keywords": [],
+  "author": {
+    "name": "Microsoft Corporation"
+  },
+  "license": "Apache-2.0",
+  "repository": "github:Microsoft/playwright-test"
+}
