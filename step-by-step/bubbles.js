@@ -43,6 +43,7 @@ const bubblesStyles = `
     color: #fff;
     font-family: arial;
     position: absolute;
+    z-index:300
   }
   
   .sb1:before {
