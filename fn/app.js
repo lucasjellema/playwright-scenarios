@@ -14,7 +14,6 @@ const rl = readline.createInterface({
 rl.on('line', function (line) {
     f(line).then((value) => {
         console.log(value);
-        return value;
     }
     )
 })
