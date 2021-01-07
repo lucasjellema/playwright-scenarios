@@ -1,0 +1,7 @@
+{
+	"name": "generate-slideshow",
+	"description": "Create PowerPoint Presentations with Web Page Snapshots with JavaScript",
+	"dependencies": {
+		"pptxgenjs": "^3.3.1"
+	}
+}
