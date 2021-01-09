@@ -51,10 +51,12 @@ const allImageDownloader = async (source) => {
   return images.length
 }
 
+let snapshotCount = 0
+
 const snapshotter = async (source, text) => {
-  console.log(`go take screenshot of page`)
+  console.log(`go take screenshot ${snapshotCount} of page`)
   // using the page object in source.page
-  await source.page.screenshot({ path: `${SNAPSHOT_PATH}pageSnapshot.png` });
+  await source.page.screenshot({ path: `${SNAPSHOT_PATH}pageSnapshot${snapshotCount++}.png` });
   return ""
 }
 
