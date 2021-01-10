@@ -4,11 +4,16 @@
   "description": "Some scenarios using Playwright - deeplink bookmarks, tactical integration, RPA, UI Healthcheck, Test Automation of User Interface, documenting web applications, customzing the client side of a web application.",
   "main": "index.js",
   "dependencies": {
+    "@ffmpeg-installer/ffmpeg": "^1.0.20",
     "axios": "^0.21.0",
-    "playwright": "^1.6.2",
+    "playwright-video": "^2.4.0",
+    "pptxgenjs": "^3.4.0",
     "request": "^2.88.2"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@playwright/test": "^0.171.0",
+    "playwright": "^1.7.1"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

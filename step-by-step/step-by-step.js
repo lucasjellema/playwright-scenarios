@@ -2,7 +2,7 @@ const { chromium } = require('playwright');
 const { trapEventsOnPage } = require("../playwrightHelper");
 const { prepareToolbar } = require('./toolbar')
 const { injectCalloutIntoPage, populateCallout } = require('./callout')
-const { scenarios, setWaitForUnpause } = require('./scenarios2')
+const { scenarios, setWaitForUnpause } = require('./scenarios')
 
 
 const scenarioStatus = { currentScenario: 0, nextScene: 0, scenarios: [], scenarioPaused: false }

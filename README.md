@@ -17,14 +17,15 @@ Invoke-Expression (New-Object System.Net.WebClient).DownloadString('https://get.
 # Note: if you get an error you might need to change the execution policy (i.e. enable Powershell) with
 # Set-ExecutionPolicy RemoteSigned -scope CurrentUser
 
-# this one line is all it takes to install a git client, the latest nodejs runtime environment
+# this one line is all it takes to install a git client, the latest nodejs runtime environment and a distribution of VS Code (the latter is optional and can be removed to save time)
 scoop install git nodejs 
+scoop bucket add extras 
+scoop install vscodium
 
 node --version
 ```
 Execute this command:
 ```
-then run
 %SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command ".\script.ps1"
 ```
 This will install Scoop into the Sandbox and subsequently use Scoop to install a Git client and the Node runtime.
@@ -38,7 +39,7 @@ cd playwright-scenarios
 npm install -D playwright
 node .\step-by-step\step-by-step.js
 ```
-The last step runs the demonstration that shows a Wikipedia tutorial with three scenarios for Netherlands, France and UK.
+The last step runs the demonstration that shows a Wikipedia tutorial with three scenarios for Netherlands, France and UK. Please maximize the Windows Sandbox window as well as the browser window.
 
 
 ## Run in Local Environment
