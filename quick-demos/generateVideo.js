@@ -12,7 +12,7 @@ const { saveVideo } = require('playwright-video');
     // Create a page.
     const page = await context.newPage();
     // start recording
-    const capture = await saveVideo(page, './video/playdev-video.mp4');
+    const capture = await saveVideo(page, __dirname+'./video/playdev-video.mp4');
     // Navigate explicitly, similar to entering a URL in the browser.
     await page.goto('https://playwright.dev/');
 

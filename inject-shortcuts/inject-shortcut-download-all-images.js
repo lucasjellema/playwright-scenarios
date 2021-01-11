@@ -9,8 +9,9 @@ const fs = require("fs");
 const request = require('request')
 
 const URL = "https://edition.cnn.com/"
-const IMAGE_PATH = "./images/"
-const SNAPSHOT_PATH = "./snapshots/"
+const IMAGE_PATH = `${__dirname}/images/`
+const SNAPSHOT_PATH = `${__dirname}/snapshots/`
+
 
 const sleep = (milliseconds) => {
   return new Promise(resolve => setTimeout(resolve, milliseconds))

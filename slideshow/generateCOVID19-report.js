@@ -10,9 +10,8 @@ const svg2img = require('svg2img');
 const request = require('request')
 const PptxGenJS = require("pptxgenjs");
 
-const IMAGE_PATH = "./images/"
-const SNAPSHOT_PATH = "./snapshots/"
-
+const IMAGE_PATH = `${__dirname}/images/`
+const SNAPSHOT_PATH = `${__dirname}/snapshots/`
 
 const addImageFromSVGElement = async function (SVGElement, page, filename) {
     const svg = await page.evaluate((svg) => svg.outerHTML, SVGElement);

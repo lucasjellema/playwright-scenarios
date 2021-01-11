@@ -5,7 +5,7 @@ const fspromises = fs.promises
 const request = require('request')
 
 const URL = "https://www.knltb.nl/"
-const SNAPSHOT_PATH = "./snapshots/"
+const SNAPSHOT_PATH = `${__dirname}/snapshots/`
 
 const sleep = (milliseconds) => {
   return new Promise(resolve => setTimeout(resolve, milliseconds))

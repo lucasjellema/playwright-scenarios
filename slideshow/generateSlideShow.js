@@ -7,7 +7,8 @@ const { chromium } = require('playwright');
 
 let PptxGenJS = require("pptxgenjs");
 
-const SNAPSHOT_PATH = "./snapshots/"
+const SNAPSHOT_PATH = `${__dirname}/snapshots/`
+
 const sleep = (milliseconds) => {
     return new Promise(resolve => setTimeout(resolve, milliseconds))
 }

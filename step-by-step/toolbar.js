@@ -2,7 +2,7 @@ const fs = require("fs");
 const fspromises = fs.promises
 const request = require('request')
 
-const SNAPSHOT_PATH = "./snapshots/"
+const SNAPSHOT_PATH = `${__dirname}/snapshots/`
 const TOOLBAR_ID = "my-playwright-floating-tool-bar"
 
 const sleep = (milliseconds) => {

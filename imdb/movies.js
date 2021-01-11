@@ -3,6 +3,7 @@ const { trapEventsOnPage } = require("../playwrightHelper");
 
 const fs = require("fs");
 const request = require('request')
+const IMAGE_PATH = `${__dirname}/images/`
 
 const movie = async (title) => {
     const browser = await chromium.launch({ headless: true })
@@ -22,7 +23,7 @@ const movie = async (title) => {
     console.log(`Downloading ${posterUrl}`)
 
     var stream = function () {
-        request(posterUrl).pipe(fs.createWriteStream(`${title}.jpg`));
+        request(posterUrl).pipe(fs.createWriteStream(`${IMAGE_PATH}${title}.jpg`));
     }
     stream();
 
