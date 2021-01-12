@@ -66,7 +66,7 @@ The last step runs a demonstration that shows a Wikipedia tutorial with three sc
 
 ## 2. Run Demonstrations
 Each of the demo scenarios can be ran from the command line, from the root directory `playwright-scenarios`. Most are headful, some are headless.
-
+    
 ### Quick Demos
 
 There are a few very small, simple and quick demos you can run to get going.
@@ -88,6 +88,7 @@ Somewhat similarly, Playwright can also generate a PDF file that contains the fu
 ```node quick-demos\generatePDF.js```
 This will take a quick tour of the CNN website and generate the file *cnn.pdf*. Note: generating PDF documents currently only works with the Chromium browser and when running in *headless* mode.
 
+
 ### IMDb
 Folder imdb contains a Node application `movie.js`. Using Playwright, this application opens the IMDb web site and searches for a movie by title. It scrapes the IMDb page for movie properties and returns a JSON object with these attributes such as director, actors, writers, release date, duration. It also writes a JPG file with the movie poster. 
 
@@ -98,13 +99,16 @@ to get a JSON document on the command line with details about three movies. In t
 
 ### Translate
 Folder Translate contains a Node appplication `translate.js` that interacts through Playwright with Google Translate. You can run this application with
-`node translate\translate.js`
+```node translate\translate.js```
 
 You will get the translation into French of the sentence *De boodschappen voor vandaag zijn melk, boter en eieren. Neem ook een stuk kaas mee. En ik lust ook een pot met stroop.* (this is Dutch). You can change the target language and the source text and language by editing the call to function *doTranslation()* at line 41 of this file.
 
 Node application `translate-api.js` uses the function exported by `translate.js` to implement an API. If you run `translate-api.js`, an HTTP listener is started that will process HTTP requests, use translate.js and indirectly Google Translate for making the desired translation and returns the translated text. At present it is restricted to texts of 5000 characters, but it could fairly easily be extended by making multiple - possibly parallel - calls to Google Translate.
 
-`node  .\translate\translate-api` – this runs a REST API at port 3000 listening for HTTP requests such as http://localhost:3000/?sourceLanguage=nl&targetLanguage=fr&sourceText=Goedendag ; This API leverages the Google Translate Web UI to perform a translation.
+```node  .\translate\translate-api``` 
+
+– this runs a REST API at port 3000 listening for HTTP requests such as `http://localhost:3000/?sourceLanguage=nl&targetLanguage=fr&sourceText=Goedendag` ; This API leverages the Google Translate Web UI to perform a translation.
+
 
 ### Step by Step Tutorial
 Run demonstrations or instructions of browser actions. Allow the user to pause and skip acts, and to reset and switch scenarios. Allow the user to interact with the browser before, after and during the scenarios. This demonstration shows three scenarios (The Netherlands, France, UK). Each country is introduced – using specific pages and sections on Wikipedia as well as through supporting sites. A callout is used to explain the scenario and each act. Balloon texts are used to further guide the user,
@@ -113,5 +117,15 @@ This article introduces the demo in detail:[Run Automated Step-by-Step Browser S
 (https://technology.amis.nl/frontend-technology/run-automated-step-by-step-browser-scenarios-for-instruction-or-demo-from-nodejs-applications-with-playwright/)
 
 Run with
-`node .\step-by-step\step-by-step.js`
+```node .\step-by-step\step-by-step.js```
 
+### Powerpoint Generator with Images, Snapshots and Data from various Web Sites
+Playwright can gather information from many different websites. Navigating to a site, taking a screenshot, downloading an image, creating an image from an SVG object and using that content to produce a Powerpoint presentation (using the npm module *PptxGenJS*) is fairly straightforward, as this demo shows.
+
+Run with 
+```
+node .\slideshow\generateCOVID19-report.js
+```
+Check the generated Powerpoint presentation in directory *slideshow*; see how the slide notes on the country report pages indicate the URLs for the source pages. 
+
+To get a different set of country reported in the slideshow, edit file *generateCOVID19-report.js* and change the content of *const countries*. 

@@ -17,7 +17,7 @@ const addImageFromSVGElement = async function (SVGElement, page, filename) {
     const svg = await page.evaluate((svg) => svg.outerHTML, SVGElement);
     svg2img(svg, function (error, buffer) {
         //returns a Buffer
-        fs.writeFileSync(`./${filename}`, buffer);
+        fs.writeFileSync(`${filename}`, buffer);
         //  imageCollection.push({ title: title, path: `./${filename}` })
     });
 }
@@ -130,7 +130,7 @@ const sleep = (milliseconds) => {
 
     //  const imageCollection = await collectImages(context)
     let pptx = new PptxGenJS();
-    let exportName = "COVID19-report-" + new Date().toISOString().substring(0, 10);
+    let exportName = `${__dirname}/COVID19-report-${new Date().toISOString().substring(0, 10)}`;
     let slide = pptx.addSlide();
     slide.addText(`COVID19 Report for ${new Date().toISOString().substring(0, 10)}`, { x: 1.5, y: 1.5, w: 6, h: 2, margin: 0.1, fontSize: 26, fill: "FFFCCC" });
     //slide.addShape(pptx.shapes.OVAL_CALLOUT, { x: 6.8, y: 3, w: 3, h: 2, fill: "00FF00", line: "000000", lineSize: 1 });
