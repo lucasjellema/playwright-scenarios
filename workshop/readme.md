@@ -110,6 +110,37 @@ Node application `translate-api.js` uses the function exported by `translate.js`
 – this runs a REST API at port 3000 listening for HTTP requests such as `http://localhost:3000/?sourceLanguage=nl&targetLanguage=fr&sourceText=Goedendag` ; This API leverages the Google Translate Web UI to perform a translation.
 
 
+### Floating Menu
+Shows how a floating toolbar can be injected into virtually any web application. [This article](https://technology.amis.nl/frontend-technology/inject-generic-floating-toolbar-into-any-web-application-or-site-using-playwright/) provides background on this scenario.
+
+Run this command:
+
+```
+node .\floating_menu\floating-menu.js
+```
+This will load the site medium.com in the Chromium browser. The floating toolbar is injected into the page. The toolbar has two active options:
+* Take Snapshot - save a PGN image for the current contents shown in the browser viewport. Note: the toolbar is hidden prior to taking the snapshot to the local file system's floating-menu\snapshots directory
+* Save All Images - save all IMG elements in the current web page to the local file system's floating-menu\images directory
+
+Try to the two functions in the floating menu bar. Navigate to a different web page. Check if the toolbar is injected again.
+
+The definition of the toolbar is defined in *const navBar* , supported by the CSS definition in *const menuStyleTag*. Feel free to tinker with the both, and see the effect. 
+
+### Shortcut Key Injection
+To show how a shortcut key combination can be injected into almost any page. This demo shows the shortcut key combination to download all images in a web page to local files. See [this article for details](https://technology.amis.nl/tech/use-playwright-to-inject-shortcut-keys-into-any-web-page-for-example-to-download-all-images/) 
+
+```
+node .\inject-shortcuts\inject-shortcut-download-all-images.js
+```
+
+This program opens a browser and navigates to a web site. It activates three shortcuts:
+* ctrl + y - take snapshot of current browser viewport (save as PNG)
+* ctrl + b - download all images in the current page - save locally as images files
+* ctrl + m - save the image currently under the mouse pointer - save locally as image file (note: this currently only works when the image under the mouse is an IMG element; not when the image is loaded through CSS or when the image is wrapped in a DIV or SPAN or defined as SVG)
+
+Move the mouse over an image and press CTRL+m. The image under the mouse pointer will be saved to the local file system. Use CTRL+y to create a snapshot of the page as visible in the browser viewport.
+
+
 ### Step by Step Tutorial
 Run demonstrations or instructions of browser actions. Allow the user to pause and skip acts, and to reset and switch scenarios. Allow the user to interact with the browser before, after and during the scenarios. This demonstration shows three scenarios (The Netherlands, France, UK). Each country is introduced – using specific pages and sections on Wikipedia as well as through supporting sites. A callout is used to explain the scenario and each act. Balloon texts are used to further guide the user,
 

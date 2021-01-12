@@ -4,7 +4,7 @@ const fs = require("fs");
 const fspromises = fs.promises
 const request = require('request')
 
-const URL = "https://www.knltb.nl/"
+const URL = "https://medium.com/"
 const SNAPSHOT_PATH = `${__dirname}/snapshots/`
 
 const sleep = (milliseconds) => {
@@ -62,18 +62,18 @@ const snapshotter = async (source, label) => {
   // using the page object in source.page
   // hide toolbar, take the snapshot, show toolbar
   await source.page.$eval(`#${TOOLBAR_ID}`, (toolbar) => { toolbar.style.display = "none"; })
-  const snapshotNameUnderConstruction = `${SNAPSHOT_PATH}${new Date().toISOString().substr(0, 19)}-${label}Snapshot.png`
+  const snapshotNameUnderConstruction = `${new Date().toISOString().substr(0, 19)}-${label}Snapshot.png`
   const snapshotName = snapshotNameUnderConstruction.replace(/:/g, "");
-  console.log(`saving snapshot file: ${snapshotName}`)
-  await source.page.screenshot({ path: snapshotName });
+  console.log(`saving snapshot file: ${SNAPSHOT_PATH}${snapshotName}`)
+  await source.page.screenshot({ path: `${SNAPSHOT_PATH}${snapshotName}` });
   // display the toolbar
   await source.page.$eval(`#${TOOLBAR_ID}`, (toolbar) => { toolbar.style.display = "block"; })
   return ""
 }
 
-const IMAGE_PATH = "./images/"
+const IMAGE_PATH = `${__dirname}/images/`
 var streamImageFromURL = function (imageURL, imageFilename) {
-  request(imageURL).pipe(fs.createWriteStream(`${IMAGE_PATH}${imageFilename}`));
+  request(imageURL).pipe(fs.createWriteStream(`${IMAGE_PATH}${imageFilename.replace(/\*/g, "")}`));
 }
 
 const allImageDownloader = async (source) => {
