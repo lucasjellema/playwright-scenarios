@@ -1,7 +1,7 @@
-# Hands On Instructions
+# Playwright workshop - Hands On Instructions
 
 This document suggests steps to get started with Playwright. It describes steps to install Playwright, to run a number of demonstrations and to get going with your own applications leveraging Playwright.
-
+![](images/playwright.png)
 1. Installation
 2. Running (and inspecting and tweaking) the demonstrations
 3. DIY: creating your own Hello World application with Playwright
@@ -26,6 +26,7 @@ This installs Playwright and browser binaries for Chromium, Firefox and WebKit. 
 
 ### Run in isolated Windows Sandbox
 To explore these scenarios on Windows, you can work most easily in a Windows Sandbox (see [this article](https://technology.amis.nl/frontend-technology/quickly-run-nodejs-demos-in-vanilla-windows-sandbox-featuring-scoop/) for detailed instructions and step by step picture).
+![](images/windows-sandbox.png)
 
 #### Quick Instructions for running in Windows Sandbox
 
@@ -97,6 +98,7 @@ This will take a quick tour of the CNN website and generate the file *cnn.pdf*. 
 
 ### Scraping Movie data from the IMDb Web Site
 Folder imdb contains a Node application `movie.js`. Using Playwright, this application opens the IMDb web site and searches for a movie by title. It scrapes the IMDb page for movie properties and returns a JSON object with these attributes such as director, actors, writers, release date, duration. It also writes a JPG file with the movie poster. 
+![](images/imdb-scraping.png)
 
 Run
 ```node .\imdb\movies.js```
@@ -104,7 +106,10 @@ to get a JSON document on the command line with details about three movies. In t
 
 
 ### Turning Google Translate UI into an API
-Folder Translate contains a Node appplication `translate.js` that interacts through Playwright with Google Translate. You can run this application with
+Folder Translate contains a Node appplication `translate.js` that interacts through Playwright with Google Translate.
+![](images/googletranslate-to-api.png)
+
+You can run this application with
 ```node translate\translate.js```
 
 You will get the translation into French of the sentence *De boodschappen voor vandaag zijn melk, boter en eieren. Neem ook een stuk kaas mee. En ik lust ook een pot met stroop.* (this is Dutch). You can change the target language and the source text and language by editing the call to function *doTranslation()* at line 41 of this file.
@@ -118,6 +123,7 @@ Node application `translate-api.js` uses the function exported by `translate.js`
 
 ### Floating Menu in any Web Page or App
 Shows how a floating toolbar can be injected into virtually any web application. [This article](https://technology.amis.nl/frontend-technology/inject-generic-floating-toolbar-into-any-web-application-or-site-using-playwright/) provides background on this scenario.
+![](images/floating-toolbar.png)
 
 Run this command:
 
@@ -134,6 +140,8 @@ The definition of the toolbar is defined in *const navBar* , supported by the CS
 
 ### Power User Shortcut Key Injection into Any Web Page or Application
 To show how a shortcut key combination can be injected into almost any page. This demo shows the shortcut key combination to download all images in a web page to local files. See [this article for details](https://technology.amis.nl/tech/use-playwright-to-inject-shortcut-keys-into-any-web-page-for-example-to-download-all-images/) 
+
+![](images/inject-shortcuts.png)
 
 ```
 node .\inject-shortcuts\inject-shortcut-download-all-images.js
