@@ -2,6 +2,10 @@
 
 This document suggests steps to get started with Playwright. It describes steps to install Playwright, to run a number of demonstrations and to get going with your own applications leveraging Playwright.
 
+1. Installation
+2. Running (and inspecting and tweaking) the demonstrations
+3. DIY: creating your own Hello World application with Playwright
+
 ## 1. Installation
 
 You can work with Playwright in various environments. For headful scenarios, you need to be able to display a graphical (desktop) UI. Working on Windows, MacOS or a Linux Desktop is recommended. You can go through this workshop in your regular Node development environment or (when on Windows) use a Windows Sandbox (an isolated, clean environment).
@@ -64,10 +68,10 @@ node .\step-by-step\step-by-step.js
 The last step runs a demonstration that shows a Wikipedia tutorial with three scenarios for Netherlands, France and UK. Please maximize the Windows Sandbox window as well as the browser window.
 
 
-## 2. Run Demonstrations
-Each of the demo scenarios can be ran from the command line, from the root directory `playwright-scenarios`. Most are headful, some are headless.
+## 2. Run Prebuilt Demonstrations of the Power of Playwright
+Each of the demo scenarios can be ran from the command line, from the root directory `playwright-scenarios` of the cloned GitHub repo. Most are headful, some are headless.
     
-### Quick Demos
+### Quick Demos: Navigate, Click, Read, Generate Screenshot, MP4 and PDF
 
 There are a few very small, simple and quick demos you can run to get going.
 
@@ -81,7 +85,9 @@ Now run
 This demo opens a page ("http://example.com"), then clicks on the first link it can find on this page which causes a navigation to take place. The URL of the new page is written to the console. A second page (i.e. browser tab) is opened. This page navigates to the GitHub Repo for this workshop. Finally, the button labeled *main* is clicked and the dropdown for selecting branches or tags is opened. Note: the call to *chromium* contains parameter *sloMo*, set to 3000. This is the number of miliseconds added by Playwright between each action it takes. This is a useful feature for debugging the actions our program is taking. When the scenario is done, we can remove the parameter or set it to a very low value. You may want to try this right now.
 
 To see how Playwright can also take a video of the action it takes, run
-```node quick-demos\generateVideo.js```
+```
+node quick-demos\generateVideo.js
+```
 An MP4 file is generated in folder *quick-demos\video* which shows exactly what was seen in the browser as the scenario was executed. Note that you do not need to run in headful mode in order to generate the video. A video is especially useful in case the scenario fails.
 
 Somewhat similarly, Playwright can also generate a PDF file that contains the full content of a web page. Run
@@ -89,7 +95,7 @@ Somewhat similarly, Playwright can also generate a PDF file that contains the fu
 This will take a quick tour of the CNN website and generate the file *cnn.pdf*. Note: generating PDF documents currently only works with the Chromium browser and when running in *headless* mode.
 
 
-### IMDb
+### Scraping Movie data from the IMDb Web Site
 Folder imdb contains a Node application `movie.js`. Using Playwright, this application opens the IMDb web site and searches for a movie by title. It scrapes the IMDb page for movie properties and returns a JSON object with these attributes such as director, actors, writers, release date, duration. It also writes a JPG file with the movie poster. 
 
 Run
@@ -97,7 +103,7 @@ Run
 to get a JSON document on the command line with details about three movies. In the directory imdb/images, you will find the movie posters for these movies. Add calls to *lookupMovie()* in order to scrape IMDb for additional movies.
 
 
-### Translate
+### Turning Google Translate UI into an API
 Folder Translate contains a Node appplication `translate.js` that interacts through Playwright with Google Translate. You can run this application with
 ```node translate\translate.js```
 
@@ -110,7 +116,7 @@ Node application `translate-api.js` uses the function exported by `translate.js`
 – this runs a REST API at port 3000 listening for HTTP requests such as `http://localhost:3000/?sourceLanguage=nl&targetLanguage=fr&sourceText=Goedendag` ; This API leverages the Google Translate Web UI to perform a translation.
 
 
-### Floating Menu
+### Floating Menu in any Web Page or App
 Shows how a floating toolbar can be injected into virtually any web application. [This article](https://technology.amis.nl/frontend-technology/inject-generic-floating-toolbar-into-any-web-application-or-site-using-playwright/) provides background on this scenario.
 
 Run this command:
@@ -126,7 +132,7 @@ Try to the two functions in the floating menu bar. Navigate to a different web p
 
 The definition of the toolbar is defined in *const navBar* , supported by the CSS definition in *const menuStyleTag*. Feel free to tinker with the both, and see the effect. 
 
-### Shortcut Key Injection
+### Power User Shortcut Key Injection into Any Web Page or Application
 To show how a shortcut key combination can be injected into almost any page. This demo shows the shortcut key combination to download all images in a web page to local files. See [this article for details](https://technology.amis.nl/tech/use-playwright-to-inject-shortcut-keys-into-any-web-page-for-example-to-download-all-images/) 
 
 ```
@@ -141,7 +147,7 @@ This program opens a browser and navigates to a web site. It activates three sho
 Move the mouse over an image and press CTRL+m. The image under the mouse pointer will be saved to the local file system. Use CTRL+y to create a snapshot of the page as visible in the browser viewport.
 
 
-### Step by Step Tutorial
+### Live Web Site Step by Step Demo | Tutorial
 Run demonstrations or instructions of browser actions. Allow the user to pause and skip acts, and to reset and switch scenarios. Allow the user to interact with the browser before, after and during the scenarios. This demonstration shows three scenarios (The Netherlands, France, UK). Each country is introduced – using specific pages and sections on Wikipedia as well as through supporting sites. A callout is used to explain the scenario and each act. Balloon texts are used to further guide the user,
 
 This article introduces the demo in detail:[Run Automated Step-by-Step Browser Scenarios for Instruction or Demo from NodeJS applications with Playwright](https://technology.amis.nl/frontend-technology/run-automated-step-by-step-browser-scenarios-for-instruction-or-demo-from-nodejs-applications-with-playwright/)
@@ -160,7 +166,7 @@ Check the generated Powerpoint presentation in directory *slideshow*; see how th
 
 To get a different set of country reported in the slideshow, edit file *generateCOVID19-report.js* and change the content of *const countries*. 
 
-## 3. Hello World - by you
+## 3. DIY Hello World - Playwright by you
 And now you create a simple first Playwright infused program. One that will instantiate a browser, open a page, navigate to a site and perform a single simple action. And then build from there.
 
 The steps are:
