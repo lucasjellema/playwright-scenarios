@@ -170,6 +170,7 @@ The steps are:
 
 ```
 const { chromium } = require('playwright');
+const assert = require('assert');
 
 (async () => {
   const browser = await chromium.launch({headless: false});
@@ -199,14 +200,28 @@ Add the following snippet between the lines with page.goto() and browser.close()
   // get the text content of this P element
   const criticismContent = await criticism.textContent()
   console.log(`Content of first paragraph: ${criticismContent}`)
+```
+This navigates to the second tab and scrolls down to the paragraph labeled *Criticism*. The text content of the next paragraph (a P element) is retrieved and written to the console (in the Node context).
+
+Run the application to see this in action:
+```
+node .\hello\app.js
+```
+
+Extend the snippet with these lines:
+```
   // set the textContent of the paragraph; note: the console.log() in this snippet
   // is executed in the Browser context - not in the NodeJS context
   await page.evaluateHandle(p => {console.log(`setting innerText from current ${p.innerText}`); p.innerText = "Hello World was here"}, criticism);
-
 ```
-This navigates to the second tab and scrolls down to the paragraph labeled *Criticism*. The text content of the next paragraph (a P element) is retrieved. Then this text content is changed by direct manipulation of the DOM element using the *page.evaluateHandle()* function.
+This changes the text content by direct manipulation of the DOM element using the *page.evaluateHandle()* function, to demonstrate how we easily go from the Node context into the browser context, taking the Playwright element handle with us to pinpoint the correct DOM element. At this point we can read and manipulate the element and its siblings, children and ancestors. We can invoke JavaScript in the browser context and return data to the NodeJS context of our program.
 
-### Open a second browser 
+To see this in action, run the application:
+```
+node .\hello\app.js
+```
+
+### Open a second browser (tab)
 
 Add the lines:
 ```
@@ -234,3 +249,64 @@ instead of
 ```
 This will create both pages as tabs in the same browser context (sharing the same locale, geolocation and device settings).
 
+Run the application:
+```
+node .\hello\app.js
+```
+Add these two lines - to enter the search string "Grease" into the search field and then to press Enter in order to execute the search and show the (one) source file that contains the string *Grease*:
+
+```
+  await githubPage.fill('input[name=q]',"Grease")
+  await githubPage.press('input[name=q]','Enter')
+```
+
+Let's make a very basic start with testing the web page. Add these lines to the *app.js* file:
+
+```
+  await githubPage.waitForSelector('"imdb/movies.js"')
+  const searchResult = await githubPage.$('"imdb/movies.js"')  
+  assert (searchResult)
+  
+  // retrieve the title attribute of the searchResult element (handle) - an anchor element
+  const title = await searchResult.getAttribute('title')
+  console.log(title)
+  assert (title =="imdb/movies.js")
+```
+This in all honesty is not the best example of a test. It is useful to see the mechanics though. Get an element handle and test whether its attributes have the expected values. And of course verify that element handle exists to begin with.
+
+A typical End to End test would try out more complex scenarios and could also verify the results from executing those steps directly in backend systems, through APIs and in secondary browser tabs or windows to inspect the effect in an isolated context.
+
+### Complete code in app.js
+The complete code as this point in file *app.js* should look like this:
+```
+const { chromium } = require('playwright');
+const assert = require('assert');
+
+(async () => {
+  const browser = await chromium.launch({headless: false, slowMo:400});
+  const context = await browser.newContext()
+  const page = await context.newPage();
+  await page.goto('https://en.wikipedia.org/wiki/%22Hello,_World!%22_program');
+  await page.click('a[title="Discuss improvements to the content page [alt-shift-t]"]')
+  const criticismheading = await page.$('#Criticism')
+  await criticismheading.scrollIntoViewIfNeeded()
+  const criticism = await page.$('p:text("Few criticism")')
+  const criticismContent = await criticism.textContent()
+  console.log(`Content of first paragraph: ${criticismContent}`)
+  await page.evaluateHandle(p => {console.log(`setting innerText from current ${p.innerText}`);p.innerText = "Hello World was here"}, criticism);
+  // open a second browser
+  const githubPage = await page.context().newPage();
+  await githubPage.goto('https://github.com/lucasjellema/playwright-scenarios');
+  await githubPage.fill('input[name=q]',"Grease")
+  await githubPage.press('input[name=q]','Enter')
+  await githubPage.waitForSelector('"imdb/movies.js"')
+  const searchResult = await githubPage.$('"imdb/movies.js"')
+  
+  assert (searchResult)
+
+  const title = await searchResult.getAttribute('title')
+  console.log(title)
+  assert (title =="imdb/movies.js")
+ // await browser.close();
+})();
+```
