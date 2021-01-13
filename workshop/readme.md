@@ -160,6 +160,7 @@ Run demonstrations or instructions of browser actions. Allow the user to pause a
 
 This article introduces the demo in detail:[Run Automated Step-by-Step Browser Scenarios for Instruction or Demo from NodeJS applications with Playwright](https://technology.amis.nl/frontend-technology/run-automated-step-by-step-browser-scenarios-for-instruction-or-demo-from-nodejs-applications-with-playwright/)
 
+![](images/step-by-step.png)
 Run with
 ```node .\step-by-step\step-by-step.js```
 
@@ -230,6 +231,7 @@ Extend the snippet with these lines:
   await page.evaluateHandle(p => {console.log(`setting innerText from current ${p.innerText}`); p.innerText = "Hello World was here"}, criticism);
 ```
 This changes the text content by direct manipulation of the DOM element using the *page.evaluateHandle()* function, to demonstrate how we easily go from the Node context into the browser context, taking the Playwright element handle with us to pinpoint the correct DOM element. At this point we can read and manipulate the element and its siblings, children and ancestors. We can invoke JavaScript in the browser context and return data to the NodeJS context of our program.
+![](images/hello-world-was-here.png)
 
 To see this in action, run the application:
 ```
@@ -269,12 +271,13 @@ Run the application:
 node .\hello\app.js
 ```
 Add these two lines - to enter the search string "Grease" into the search field and then to press Enter in order to execute the search and show the (one) source file that contains the string *Grease*:
+![](images/github-search.png)
 
 ```
   await githubPage.fill('input[name=q]',"Grease")
   await githubPage.press('input[name=q]','Enter')
 ```
-
+![](images/github-grease.png)
 Let's make a very basic start with testing the web page. Add these lines to the *app.js* file:
 
 ```
