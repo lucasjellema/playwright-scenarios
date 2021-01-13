@@ -157,6 +157,7 @@ Run with
 
 ### Powerpoint Generator with Images, Snapshots and Data from various Web Sites
 Playwright can gather information from many different websites. Navigating to a site, taking a screenshot, downloading an image, creating an image from an SVG object and using that content to produce a Powerpoint presentation (using the npm module *PptxGenJS*) is fairly straightforward, as this demo shows.
+![](images/ppt-generator.png)
 
 Run with 
 ```
