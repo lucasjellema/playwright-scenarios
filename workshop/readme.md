@@ -144,8 +144,7 @@ Move the mouse over an image and press CTRL+m. The image under the mouse pointer
 ### Step by Step Tutorial
 Run demonstrations or instructions of browser actions. Allow the user to pause and skip acts, and to reset and switch scenarios. Allow the user to interact with the browser before, after and during the scenarios. This demonstration shows three scenarios (The Netherlands, France, UK). Each country is introduced – using specific pages and sections on Wikipedia as well as through supporting sites. A callout is used to explain the scenario and each act. Balloon texts are used to further guide the user,
 
-This article introduces the demo in detail:[Run Automated Step-by-Step Browser Scenarios for Instruction or Demo from NodeJS applications with Playwright]
-(https://technology.amis.nl/frontend-technology/run-automated-step-by-step-browser-scenarios-for-instruction-or-demo-from-nodejs-applications-with-playwright/)
+This article introduces the demo in detail:[Run Automated Step-by-Step Browser Scenarios for Instruction or Demo from NodeJS applications with Playwright](https://technology.amis.nl/frontend-technology/run-automated-step-by-step-browser-scenarios-for-instruction-or-demo-from-nodejs-applications-with-playwright/)
 
 Run with
 ```node .\step-by-step\step-by-step.js```
@@ -160,3 +159,78 @@ node .\slideshow\generateCOVID19-report.js
 Check the generated Powerpoint presentation in directory *slideshow*; see how the slide notes on the country report pages indicate the URLs for the source pages. 
 
 To get a different set of country reported in the slideshow, edit file *generateCOVID19-report.js* and change the content of *const countries*. 
+
+## 3. Hello World - by you
+And now you create a simple first Playwright infused program. One that will instantiate a browser, open a page, navigate to a site and perform a single simple action. And then build from there.
+
+The steps are:
+1. create a new directory *hello*
+2. create a new file called *app.js*
+3. add the following content to the file:
+
+```
+const { chromium } = require('playwright');
+
+(async () => {
+  const browser = await chromium.launch({headless: false});
+  const page = await browser.newPage();
+  await page.goto('https://en.wikipedia.org/wiki/%22Hello,_World!%22_program');
+
+  await browser.close();
+})();
+```
+Run your first Playwright Application:
+```
+node .\hello\app.js
+```
+You should see the browser being launched, the page being created and navigated. And the browser being closed immediately after that. No lingering around. To take things slower, you can add the *sloMo* property in the instantiation of the browser:
+```
+await chromium.launch({ headless: false , slowMo:3000})
+```
+or remove the line that closes the browser.
+
+Add the following snippet between the lines with page.goto() and browser.close():
+```
+  await page.click('a[title="Discuss improvements to the content page [alt-shift-t]"]')
+  const criticismHeader = await page.$('#Criticism')
+  await criticismHeader.scrollIntoViewIfNeeded()
+  // get a handle on the text paragraph following the header 
+  const criticism = await page.$('p:text("Few criticism")')
+  // get the text content of this P element
+  const criticismContent = await criticism.textContent()
+  console.log(`Content of first paragraph: ${criticismContent}`)
+  // set the textContent of the paragraph; note: the console.log() in this snippet
+  // is executed in the Browser context - not in the NodeJS context
+  await page.evaluateHandle(p => {console.log(`setting innerText from current ${p.innerText}`); p.innerText = "Hello World was here"}, criticism);
+
+```
+This navigates to the second tab and scrolls down to the paragraph labeled *Criticism*. The text content of the next paragraph (a P element) is retrieved. Then this text content is changed by direct manipulation of the DOM element using the *page.evaluateHandle()* function.
+
+### Open a second browser 
+
+Add the lines:
+```
+  const githubPage = await browser.newPage();
+  await githubPage.goto('https://github.com/lucasjellema/playwright-scenarios');   
+```
+and run `node app.js` again. A second browser window is opened with GitHub loaded, parallel to the original one with Wikipedia. 
+
+If you want to open a second browser tab, you would need to create all page from the same browser context; replace the line:
+```
+  const page = await browser.newPage();
+```
+with:
+```
+  const context = await browser.newContext()
+  const page = await context.newPage();
+```
+and use 
+```
+  const githubPage = await context.newPage();
+```
+instead of
+```
+  const githubPage = await browser.newPage();
+```
+This will create both pages as tabs in the same browser context (sharing the same locale, geolocation and device settings).
+
